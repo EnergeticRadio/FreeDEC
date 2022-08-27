@@ -1,0 +1,130 @@
+<!--
+
+   FreeDEC - A fully capable software based EAS encoder/decoder
+   Copyright (C) 2022  EnergeticRadio
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FreeDEC admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+<nav class="navbar has-shadow">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="">
+            <img style="margin-top: -3px;" src="logo.svg">
+        </a>
+
+        <a class="navbar-burger">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item">
+                Home
+            </a>
+
+            <a class="navbar-item">
+                Log
+            </a>
+
+            <a class="navbar-item">
+                Settings
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-danger">
+                        <strong>RWT</strong>
+                    </a>
+
+                    <a class="button is-link">
+                        <strong>New Alert</strong>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<section class="section">
+    <div class="columns">
+        <div class="column is-narrow">
+            <aside class="menu">
+                <p class="menu-label has-text-centered has-text-weight-bold">
+                    Sources
+                </p>
+
+                <ul class="menu-list">
+                    <li>
+                        <a class="is-flex">
+                            <span class="tag is-small is-success is-rounded is-loading" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;WBAP
+                        </a>
+                    </li>
+                    <li>
+                        <a class="is-flex">
+                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;KSCS
+                        </a>
+                    </li>
+                    <li>
+                        <a class="is-flex">
+                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;KEC55
+                        </a>
+                    </li>
+                </ul>
+
+                <p class="menu-label has-text-centered has-text-weight-bold">
+                    Relays
+                </p>
+
+                <ul class="menu-list">
+                    <li>
+                        <a class="is-flex">
+                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;RadioC5
+                        </a>
+                    </li>
+                    <li>
+                        <a class="is-flex">
+                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;ChadFM
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+
+        <div class="column">
+
+        </div>
+    </div>
+</section>
+</body>
+</html>

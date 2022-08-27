@@ -110,6 +110,7 @@ def extract_message(in_file):
     if found_attn >= 16 and len(markers) >= 3:
         start = markers[1]
         end = markers[2]
+
     else:
         start = markers[0]
         end = markers[1]
