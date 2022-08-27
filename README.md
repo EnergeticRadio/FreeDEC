@@ -34,6 +34,7 @@ Raw message handlers receive the raw audio and data recorded from an audio sourc
 
 ## Installing
 FreeDEC is currently only supported on linux based systems.
+
 #### Dependencies:
 python3
 multimon-ng
@@ -109,7 +110,9 @@ fips=[
 ````
 
 name: Name of station. Can be anything.
+
 callsign: Callsign of station or relay. max 8 characters, should be capitalized, and only contain A-Z, 0-9, and -.
+
 fips: An alert must match at least one code in this list to be relayed
 
 #### [[sources]]
@@ -125,7 +128,6 @@ device="ALSA_DEVICE_NAME"
 name: Name of source. Can be anything.
 type: Type of audio source. pulseaudio is currently the only supported source.
 device: Name of pulseaudio device
-
 To get a list of pulseaudio devices, run the command:
 ```
 >>> pacmd list-sources | grep name:
@@ -136,9 +138,10 @@ The pulseaudio device name would be
 > alsa_output.pci-0000_00_14.2.analog-stereo.monitor
 
 ## FreeDEC in action
-Radio
+#### Radio
 [RadioC5 (DFW)](https://radioc5.com "RadioC5 (DFW)")
+
 [Chad FM (DFW)](https://mytuner-radio.com/radio/chad-fm-490035/ "Chad FM (DFW)")
 
-YouTube
+#### YouTube
 [North Texas EAS Archive (DFW)](https://www.youtube.com/channel/UCyN9A5gQVlQaEHZ1tZ27PfA "North Texas EAS Archive (DFW)")
