@@ -1,0 +1,116 @@
+#FreeDEC configuration
+
+timezone="America/Chicago"
+audio_base_dir = "AUDIO"
+
+[server]
+host="0.0.0.0"
+port=8080
+
+[event_codes] # Codes with "true" will be automatically relayed to all stations
+"EAN"=true  #Emergency Action Notification    Mandatory
+"NIC"=true  #National Information Center      Mandatory
+"NPT"=true  #National Periodic Test           Mandatory
+"RMT"=true  #Required Monthly Test            Mandatory
+"RWT"=false #Required Weekly Test             Mandatory (Should not relay from upstream, instead broadcast own RWT)
+"??A"=true  #Unrecognized Watch               Optional
+"??E"=true  #Unrecognized Emergency           Optional
+"??S"=true  #Unrecognized Statement           Optional
+"??W"=true  #Unrecognized Warning             Optional
+"ADR"=true  #Administrative Message           Optional
+"AVA"=true  #Avalanche Watch                  Optional
+"AVW"=true  #Avalanche Warning                Optional
+"BLU"=true  #Blue Alert                       Optional
+"BZW"=true  #Blizzard Warning                 Optional
+"CAE"=true  #Child Abduction Emergency        Optional
+"CDW"=true  #Civil Danger Warning             Optional
+"CEM"=true  #Civil Emergency Message          Optional
+"CFA"=true  #Coastal Flood Watch              Optional
+"CFW"=true  #Coastal Flood Warning            Optional
+"DMO"=true  #Practice/Demo Warning            Optional
+"DSW"=true  #Dust Storm Warning               Optional
+"EQW"=true  #Earthquake Warning               Optional
+"EVI"=true  #Evacuation Immediate             Optional
+"EWW"=true  #Extreme Wind Warning             Optional
+"FFA"=true  #Flash Flood Watch                Optional
+"FFS"=true  #Flash Flood Statement            Optional
+"FFW"=true  #Flash Flood Warning              Optional
+"FLA"=true  #Flood Watch                      Optional
+"FLS"=true  #Flood Statement                  Optional
+"FLW"=true  #Flood Warning                    Optional
+"FRW"=true  #Fire Warning                     Optional
+"HLS"=true  #Hurricane Local Statement        Optional
+"HMW"=true  #Hazardous Materials Warning      Optional
+"HUA"=true  #Hurricane Watch                  Optional
+"HUW"=true  #Hurricane Warning                Optional
+"HWA"=true  #High Wind Watch                  Optional
+"HWW"=true  #High Wind Warning                Optional
+"LAE"=true  #Local Area Emergency             Optional
+"LEW"=true  #Law Enforcement Warning          Optional
+"NMN"=true  #Network Notification Message     Optional
+"NUW"=true  #Nuclear Power Plant Warning      Optional
+"RHW"=true  #Radiological Hazard Warning      Optional
+"SMW"=true  #Special Marine Warning           Optional
+"SPS"=true  #Special Weather Statement        Optional
+"SPW"=true  #Shelter In-Place warning         Optional
+"SQW"=true  #Snow Squall Warning              Optional
+"SSA"=true  #Storm Surge Watch                Optional
+"SSW"=true  #Storm Surge Warning              Optional
+"SVA"=true  #Severe Thunderstorm Watch        Optional
+"SVR"=true  #Severe Thunderstorm Warning      Optional
+"SVS"=true  #Severe Weather Statement         Optional
+"TOR"=true  #Tornado Warning                  Optional
+"TOA"=true  #Tornado Watch                    Optional
+"TOE"=true  #911 Telephone Outage Emergency   Optional
+"TRA"=true  #Tropical Storm Watch             Optional
+"TRW"=true  #Tropical Storm Warning           Optional
+"TSA"=true  #Tsunami Watch                    Optional
+"TSW"=true  #Tsunami Warning                  Optional
+"VOW"=true  #Volcano Warning                  Optional
+"WSA"=true  #Winter Storm Watch               Optional
+"WSW"=true  #Winter Storm Warning             Optional
+"BHW"=false #Biological Hazard Warning        Not Implemented
+"BWW"=false #Boil Water Warning               Not Implemented
+"CHW"=false #Chemical Hazard Warning          Not Implemented
+"CWW"=false #Contaminated Water Warning       Not Implemented
+"DBA"=false #Dam Watch                        Not Implemented
+"DBW"=false #Dam Break Warning                Not Implemented
+"DEW"=false #Contagious Disease Warning       Not Implemented
+"EAT"=false #Emergency Action Termination     Not Implemented
+"EVA"=false #Evacuation Watch                 Not Implemented
+"FCW"=false #Food Contamination Warning       Not Implemented
+"FSW"=false #Flash Freeze Warning             Not Implemented
+"FZW"=false #Freeze Warning                   Not Implemented
+"IBW"=false #Iceberg Warning                  Not Implemented
+"IFW"=false #Industrial Fire Warning          Not Implemented
+"LSW"=false #Landslide Warning                Not Implemented
+"NAT"=false #National Audible Test            Not Implemented
+"NST"=false #National Silent Test             Not Implemented
+"POS"=false #Power Outage Advisory            Not Implemented
+"WFA"=false #Wild Fire Watch                  Not Implemented
+"WFW"=false #Wild Fire Warning                Not Implemented
+
+[[stations]]
+name="Station"
+callsign="KXXX"
+fips=[
+    "48000",
+    "48439",
+    "48113",
+    "48085",
+    "48121",
+    "48497",
+    "48367",
+    "48221",
+    "48425",
+    "48251",
+    "48139",
+    "48257",
+    "48231",
+    "48397"
+]
+
+[[sources]]
+name="KSCS"
+type="pulse"
+device="alsa_output.pci-0000_00_14.2.analog-stereo.monitor"
