@@ -19,6 +19,8 @@
 import time
 import re
 import os
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import toml
 import _audio as audio
@@ -102,11 +104,15 @@ def decode(raw_same):
     org = same_a.pop(0)
     event_code = same_a.pop(0)
     event = all_fips['event'][event_code]
-    purge = same_b.pop(0)
-    issue = same_b.pop(0)
+    eas_purge = same_b.pop(0)
+    eas_issue = same_b.pop(0)
     callsign = same_b.pop(0).strip()
     fips = []
     us_all = False
+
+    issue_dt = datetime.strptime(f"{eas_issue}", '%j%H%M').replace(tzinfo=timezone.utc)
+    issue = issue_dt.astimezone(ZoneInfo(config['timezone']))
+    purge = issue + timedelta(hours=int(eas_purge[:2]), minutes=int(eas_purge[2:]))
 
     for fips_code in same_a:
         if bool(int(fips_code[0])):
@@ -139,10 +145,10 @@ def decode(raw_same):
         'event': event,
         'areas': fips,
         'entire_us': us_all,
-        'purge': purge,
-        'time_issued': issue,
         'from_callsign': callsign.replace('/', '-'),
-        'filename': f'{int(time.time())}-{event_code}'
+        'filename': f'{int(time.time())}-{event_code}',
+        'issue': issue,
+        'purge': purge
     }
 
     return eas
