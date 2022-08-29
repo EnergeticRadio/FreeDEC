@@ -69,27 +69,27 @@ def is_dupe(raw_same):
     """Check if received message is a duplicate"""
 
     msg_ident = raw_same.rsplit('-', 2)[0]
+    found_dupe = False
 
     try:
         with open('eas.log', 'r') as f:
-            prev_idents = []
-
-            for _ in range(10):
-                line = f.readline()
-
-                if not line == '':
-                    prev_idents.append(line.split(':')[1].rsplit('-', 2)[0])
-
-                else:
-                    break
+            log_lines = f.readlines()
 
     except FileNotFoundError:
-        prev_idents = ['']
+        log_lines = []
 
-    with open('eas.log', 'a+') as f:
-        f.write(f'{round(time.time())}:{raw_same}\n')
+    for line in log_lines:
+        if msg_ident == line.split(':')[1].rsplit('-', 2)[0]:
+            found_dupe = True
+            break
 
-    return msg_ident in prev_idents
+    log_lines.append(f'{round(time.time())}:{raw_same}\n')
+
+    with open('eas.log', 'w+') as f:
+        for line in log_lines[-1000:]:
+            f.write(line)
+
+    return found_dupe
 
 
 def decode(raw_same):
