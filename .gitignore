@@ -128,3 +128,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# FreeDEC temp files
+todo.txt
+AUDIO/
