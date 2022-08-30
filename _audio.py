@@ -105,7 +105,6 @@ def extract_message(in_file):
                 mrk_started = False
 
     markers.append(curr_marker)
-    print(len(markers))
 
     if found_attn >= 16 and len(markers) >= 3:
         start = markers[1]

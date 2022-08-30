@@ -19,18 +19,44 @@
 -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FreeDEC admin</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .blink {
+            animation: blink-animation 1s infinite;
+            -webkit-animation: blink-animation 1s infinite;
+        }
+        @keyframes blink-animation {
+            0%, 50%, 100% {
+                opacity: 1;
+            }
+            25%, 75% {
+                opacity: 0;
+            }
+        }
+        @-webkit-keyframes blink-animation {
+            0%, 50%, 100% {
+                opacity: 1;
+            }
+            25%, 75% {
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar has-shadow">
     <div class="navbar-brand">
-        <a class="navbar-item" href="">
-            <img style="margin-top: -3px;" src="logo.svg">
+        <a class="navbar-item" href="/">
+            <img style="margin-top: -3px;" alt="logo" src="/static/logo.svg">
         </a>
 
         <a class="navbar-burger">
@@ -41,13 +67,9 @@
     </div>
 
     <div class="navbar-menu">
-        <div class="navbar-start">
-            <a class="navbar-item">
+        <div class="navbar-start is-mobile">
+            <a class="navbar-item" href="/">
                 Home
-            </a>
-
-            <a class="navbar-item">
-                Log
             </a>
 
             <a class="navbar-item">
@@ -74,57 +96,93 @@
 <section class="section">
     <div class="columns">
         <div class="column is-narrow">
-            <aside class="menu">
-                <p class="menu-label has-text-centered has-text-weight-bold">
+            <h1 class="is-size-4 has-text-bold ml-2">Status</h1>
+            <div class="box" id="status">
+                <aside class="menu">
+                <p class="menu-label has-text-weight-bold">
                     Sources
                 </p>
 
                 <ul class="menu-list">
-                    <li>
+                    <li v-for="r in data.source" v-cloak>
                         <a class="is-flex">
-                            <span class="tag is-small is-success is-rounded is-loading" style="width:20px; height: 20px;"></span>
-                            &nbsp;&nbsp;WBAP
-                        </a>
-                    </li>
-                    <li>
-                        <a class="is-flex">
-                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
-                            &nbsp;&nbsp;KSCS
-                        </a>
-                    </li>
-                    <li>
-                        <a class="is-flex">
-                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
-                            &nbsp;&nbsp;KEC55
+                            <span class="tag is-small is-rounded" v-bind:class="r.status_style" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;{{ r.name }}
                         </a>
                     </li>
                 </ul>
 
-                <p class="menu-label has-text-centered has-text-weight-bold">
+                <p class="menu-label has-text-weight-bold">
                     Relays
                 </p>
 
                 <ul class="menu-list">
-                    <li>
+                    <li v-for="r in data.relay" v-cloak>
                         <a class="is-flex">
-                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
-                            &nbsp;&nbsp;RadioC5
-                        </a>
-                    </li>
-                    <li>
-                        <a class="is-flex">
-                            <span class="tag is-small is-success is-rounded" style="width:20px; height: 20px;"></span>
-                            &nbsp;&nbsp;ChadFM
+                            <span class="tag is-small is-rounded" v-bind:class="r.status_style" style="width:20px; height: 20px;"></span>
+                            &nbsp;&nbsp;{{ r.name }}
                         </a>
                     </li>
                 </ul>
             </aside>
+            </div>
         </div>
 
         <div class="column">
+            <h1 class="is-size-4 has-text-bold ml-2">Received alerts</h1>
+            <div class="box">
+                <table class="table is-fullwidth is-striped ">
+                    <thead>
+                        <tr>
+                            <td>Originator</td>
+                            <td>Received from</td>
+                            <td>Event</td>
+                            <td>Received</td>
+                            <td>Issued</td>
+                            <td>Expires</td>
+                            <td>Affected areas</td>
+                        </tr>
+                    </thead>
 
+                    <tbody>
+                        <tr>
+                            <td>EAS</td>
+                            <td>KSCS</td>
+                            <td>Flash Flood Warning</td>
+                            <td>2341730</td>
+                            <td>2341730</td>
+                            <td>2342030</td>
+                            <td>Somervell County, Texas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </section>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue@3"></script>
+<script>
+    const { createApp } = Vue
+
+    const status = createApp({
+        data() {
+            return {
+                data: {"source":[],"relay":[]}
+            }
+        },
+        mounted() {
+            this.intervalFetch = setInterval(() => {
+                axios
+                .get('/api/get_status')
+                .then((response) => {
+                    this.data = response.data
+                })
+            }, 500)
+        }
+    })
+    status.mount('#status');
+</script>
 </body>
 </html>

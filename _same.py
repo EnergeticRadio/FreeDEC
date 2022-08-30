@@ -94,6 +94,13 @@ def is_dupe(raw_same):
     return found_dupe
 
 
+def get_modules():
+    sources = [s['name'] for s in config['sources']]
+    stations = [s['callsign'] for s in config['stations']]
+
+    return sources, stations
+
+
 def decode(raw_same):
     """Decode raw SAME string into dictionary"""
 

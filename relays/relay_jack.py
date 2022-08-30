@@ -62,7 +62,21 @@ def check_incoming(callsign):
         return False
 
 
-def process(frames):
+def set_status(status):
+    params = {
+        'group': 'relay',
+        'name': callsign,
+        'status': status
+    }
+
+    try:
+        requests.get(f'{server_url}/api/set_status', params=params)
+
+    except requests.exceptions.ConnectionError:
+        pass
+
+
+def process(_):
     try:
         data = q.get_nowait()
     except queue.Empty:
@@ -84,7 +98,7 @@ except requests.exceptions.ConnectionError:
     exit(1)
 
 try:
-    client = jack.Client('Freedec')
+    client = jack.Client('FreeDEC')
 except jack.JackOpenError:
     print('Failed to connect to jack')
     exit(1)
@@ -100,13 +114,14 @@ for channel in range(channels):
         client.outports.register(f'output_{channel}{l_r}')
 
 with client:
-    print('Relay UP')
+    print(f'Relay UP: {callsign}')
 
     try:
         while True:
             try:
                 if check_incoming(callsign):
                     print('Relaying alert')
+                    set_status('active')
 
                     with sf.SoundFile('alert.wav') as f:
                         block_generator = f.blocks(blocksize=blocksize, dtype='float32',
@@ -125,11 +140,15 @@ with client:
 
                     print('EOM')
 
+                else:
+                    set_status('idle')
+
             except requests.exceptions.ConnectionError:
-                pass
+                set_status('fail')
 
             except RuntimeError:
                 print('Error reading alert!, retrying...')
+                set_status('fail')
 
             time.sleep(1)
 

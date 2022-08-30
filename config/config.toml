@@ -91,7 +91,6 @@ port=8080
 "WFW"=false #Wild Fire Warning                Not Implemented
 
 [[stations]]
-name="Station"
 callsign="KXXX"
 fips=[
     "48000",

@@ -20,30 +20,70 @@ import os
 import time
 
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 import toml
 
+import _same as same
+
 
 class Status:
     def __init__(self):
-        self.status = {}
-
-    def set(self, name, status_str, status_type):
-        # type idle (green), active (green, flashing), fail (red)
-
-        self.status[name] = {
-            'status_str': status_str,
-            'status_color': status_type,
-            'timestamp': round(time.time())
+        self.status = {
+            'source': {},
+            'relay': {}
+        }
+        self.status_styles = {
+            'check': ['idle', 'active', 'fail', 'not-started'],
+            'idle': 'is-success',
+            'active': 'is-warning blink',
+            'fail': 'is-danger',
+            'not-started': ''
         }
 
-    def get(self):
-        for key in self.status:
-            if round(time.time()) - self.status[key]['timestamp'] > 5:
-                self.status[key]['status_str'] = 'fail'
+        sources, relays = same.get_modules()
 
-        return self.status
+        for source in sources:
+            self.set('source', source, 'not-started')
+
+        for relay in relays:
+            self.set('relay', relay, 'not-started')
+
+    def set(self, group, name, status):
+        """Set the status of a component. Similar to heartbeat"""
+
+        if status in self.status_styles['check']:
+            self.status[group][name] = {
+                'name': name,
+                'status': status,
+                'status_style': self.status_styles[status],
+                'timestamp': round(time.time())
+            }
+
+    def get(self):
+        """Returns all statuses, marks status as failed if time of last heartbeat was too long ago"""
+
+        out = {}
+
+        for group_name in self.status:
+            group = self.status[group_name]
+
+            # Don't check sources for now due to sources blocking
+            if group_name != 'source':
+                for s in group:
+                    last_ping = round(time.time()) - self.status[group_name][s]['timestamp']
+                    last_status = self.status[group_name][s]['status']
+
+                    if last_status == 'idle' and last_ping > 5 \
+                            or last_status == 'active' and last_ping > 60 * 3:
+
+                        self.status[group_name][s]['status'] = 'fail'
+                        self.status[group_name][s]['status_style'] = self.status_styles['fail']
+
+            out[group_name] = [self.status[group_name][s] for s in sorted(group)]
+
+        return out
 
 
 config = toml.load('config/config.toml')
@@ -54,21 +94,25 @@ app = FastAPI()
 test = False
 
 app.mount('/audio', StaticFiles(directory=audio_base_dir), name='audio')
+app.mount('/static', StaticFiles(directory='html/static'), name='static')
+
+
+# ===== API URLs ===== #
 
 
 @app.get('/api/get_alert')
 async def read_item(callsign):
     for file in os.listdir(audio_base_dir):
-        if f'{callsign}-LIVE' in file:
+        if f'{callsign}.wav' in file:
             return file
 
     return None
 
 
 @app.get('/api/clear_alert')
-async def read_item(callsign):
+async def clear_alert(callsign):
     for file in os.listdir(audio_base_dir):
-        if f'{callsign}-LIVE' in file:
+        if f'{callsign}.wav' in file:
             os.remove(f'{audio_base_dir}/{file}')
 
             return 'ok'
@@ -76,9 +120,27 @@ async def read_item(callsign):
     return None
 
 
+@app.get('/api/get_status')
+async def get_status():
+    return s.get()
+
+
 @app.get('/api/set_status')
-async def set_status(name, status_str, status_type):
-    s.set(name, status_str, status_type)
+async def set_status(group, name, status):
+    s.set(group, name, status)
+
+    return 'ok'
+
+
+# ===== API URLs ===== #
+
+
+@app.get('/')
+async def admin_home():
+    with open('html/home.html', 'r') as html_f:
+        html = html_f.read()
+
+    return HTMLResponse(content=html, status_code=200)
 
 
 if __name__ == '__main__':

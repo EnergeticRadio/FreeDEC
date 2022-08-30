@@ -21,6 +21,7 @@ import subprocess
 import threading
 
 import toml
+import requests
 
 import _same as same
 
@@ -29,7 +30,8 @@ config = toml.load('config/config.toml')
 
 
 class Monitor:
-    def __init__(self, device):
+    def __init__(self, name, device):
+        self.name = name
         self.device = device
 
         self.monitor = None
@@ -46,10 +48,26 @@ class Monitor:
 
         return self.monitor.poll() is None
 
+    def set_status(self, status):
+        host = config["server"]["host"]
+        port = config["server"]["port"]
+        params = {
+            'group': 'source',
+            'name': self.name,
+            'status': status
+        }
+
+        try:
+            requests.get(f'http://{host}:{port}/api/set_status', params=params)
+
+        except requests.exceptions.ConnectionError:
+            pass
+
     def _start_monitor(self):
         """Start monitor process"""
 
         self.monitor = subprocess.Popen(['monitors/multimon-pulse.sh', self.device], stdout=subprocess.PIPE)
+        self.set_status('idle')
 
     def _record_pulse(self):
         """Records from a specific pulseaudio device"""
@@ -81,6 +99,7 @@ class Monitor:
 
                     self._record_pulse()
                     self.awaiting_eom = True
+                    self.set_status('active')
 
                 else:
                     self.awaiting_eom = False
@@ -100,6 +119,7 @@ class Monitor:
             same.re_encode(self.last_eas)
 
             self.awaiting_eom = False
+            self.set_status('idle')
 
             print('Monitoring')
 
@@ -107,8 +127,8 @@ class Monitor:
             print(f'Received invalid SAME: {raw_same}')
 
 
-def run_monitor(device):
-    m = Monitor(device)
+def run_monitor(name, device):
+    m = Monitor(name, device)
 
     while True:
         m.handle_alert()
@@ -118,7 +138,7 @@ def main():
     monitors = {}
 
     for source in config['sources']:
-        monitors[source['name']] = threading.Thread(target=run_monitor, args=(source['device'], ))
+        monitors[source['name']] = threading.Thread(target=run_monitor, args=(source['name'], source['device'], ))
         monitors[source['name']].start()
 
     print(f"""Active audio sources: {', '.join([f"{s['name']} ({s['type']})" for s in config['sources']])}""")
