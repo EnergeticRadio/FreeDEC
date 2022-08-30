@@ -38,12 +38,12 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-buffersize = 20
+buffer_size = 20
 server_url = f'http://{args.server}:{args.port}'
 callsign = args.callsign
 channels = args.channels
 
-q = queue.Queue(maxsize=buffersize)
+q = queue.Queue(maxsize=buffer_size)
 
 
 def check_incoming(callsign):
@@ -103,9 +103,9 @@ except jack.JackOpenError:
     print('Failed to connect to jack')
     exit(1)
 
-blocksize = client.blocksize
+block_size = client.blocksize
 samplerate = client.samplerate
-timeout = blocksize * buffersize / samplerate
+timeout = block_size * buffer_size / samplerate
 client.set_process_callback(process)
 
 for channel in range(channels):
@@ -124,10 +124,10 @@ with client:
                     set_status('active')
 
                     with sf.SoundFile('alert.wav') as f:
-                        block_generator = f.blocks(blocksize=blocksize, dtype='float32',
+                        block_generator = f.blocks(blocksize=block_size, dtype='float32',
                                                    always_2d=True, fill_value=0)
 
-                        for _, data in zip(range(buffersize), block_generator):
+                        for _, data in zip(range(buffer_size), block_generator):
                             q.put_nowait(data)
 
                         for data in block_generator:
