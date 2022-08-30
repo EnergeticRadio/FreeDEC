@@ -93,7 +93,7 @@ class Monitor:
                     log_str = 'Receiving EAS from: '
                     log_str += f'{self.last_eas["from_callsign"]} | '
                     log_str += f'{self.last_eas["event"]} for '
-                    log_str += ', '.join([f'{s["county"]} {s["state"]}' for s in self.last_eas['areas']])
+                    log_str += '; '.join([f'{s["county"]} {s["state"]}' for s in self.last_eas['areas']])
 
                     print(log_str.strip())
 

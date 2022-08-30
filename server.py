@@ -71,6 +71,7 @@ class Status:
 
             # Don't check sources for now due to sources blocking
             if group_name != 'source':
+
                 for s in group:
                     last_ping = round(time.time()) - self.status[group_name][s]['timestamp']
                     last_status = self.status[group_name][s]['status']
