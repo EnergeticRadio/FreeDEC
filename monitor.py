@@ -88,7 +88,7 @@ class Monitor:
 
             self.last_eas = same.decode(raw_same)
 
-            if not same.is_dupe(raw_same):
+            if not same.is_dupe(self.last_eas):
                 if not self.awaiting_eom:
                     log_str = 'Receiving EAS from: '
                     log_str += f'{self.last_eas["from_callsign"]} | '

@@ -67,10 +67,13 @@ def message_type(raw_same):
         return 'eom'
 
 
-def is_dupe(raw_same):
+def is_dupe(decoded):
     """Check if received message is a duplicate"""
 
+    raw_same = decoded['raw_same']
     msg_ident = raw_same.rsplit('-', 2)[0]
+    timestamp = decoded['timestamp']
+
     found_dupe = False
 
     try:
@@ -81,11 +84,13 @@ def is_dupe(raw_same):
         log_lines = []
 
     for line in log_lines:
-        if msg_ident == line.split(':')[1].rsplit('-', 2)[0]:
+        line_ident = line.split(':')[1].rsplit('-', 2)[0]
+
+        if msg_ident == line_ident:
             found_dupe = True
             break
 
-    log_lines.append(f'{round(time.time())}:{raw_same}\n')
+    log_lines.append(f'{timestamp}:{raw_same}\n')
 
     with open('eas.log', 'w+') as f:
         for line in log_lines[-1000:]:
@@ -116,6 +121,7 @@ def decode(raw_same):
     callsign = same_b.pop(0).strip()
     fips = []
     us_all = False
+    timestamp = int(time.time())
 
     year = datetime.now().year
     issue_dt = datetime.strptime(f"{year}{eas_issue}", '%Y%j%H%M').replace(tzinfo=timezone.utc)
@@ -154,7 +160,8 @@ def decode(raw_same):
         'areas': fips,
         'entire_us': us_all,
         'from_callsign': callsign.replace('/', '-'),
-        'filename': f'{int(time.time())}-{event_code}',
+        'filename': f'{timestamp}-{event_code}',
+        'timestamp': timestamp,
         'issue': issue,
         'purge': purge
     }
