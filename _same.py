@@ -106,6 +106,43 @@ def get_modules():
     return sources, stations
 
 
+def get_log(max_lines):
+    """Return max_lines latest received alerts"""
+    try:
+        with open('eas.log', 'r') as f:
+            alerts = []
+
+            lines = f.readlines()[max_lines*-1:]
+            lines.reverse()
+
+            for line in lines:
+                line = line.strip().split(':')
+                received, same = line
+
+                decoded = decode(same)
+
+                archive_path = f'{config["audio_base_dir"]}/ARCHIVE/' \
+                               f'{decoded["filename"]}-{decoded["from_callsign"]}'
+
+                received = datetime.fromtimestamp(int(received)).strftime("%A, %B %d at %H:%M")
+                issue = decoded['issue'].strftime("%A, %B %d at %H:%M")
+                purge = decoded['purge'].strftime("%H:%M")
+
+                decoded['received'] = received
+                decoded['issue'] = issue
+                decoded['purge'] = purge
+
+                print(archive_path)
+                print(os.path.exists(archive_path))
+
+                alerts.append(decoded)
+
+    except FileNotFoundError:
+        alerts = []
+
+    return alerts
+
+
 def decode(raw_same):
     """Decode raw SAME string into dictionary"""
 
