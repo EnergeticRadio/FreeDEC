@@ -117,7 +117,8 @@ def decode(raw_same):
     fips = []
     us_all = False
 
-    issue_dt = datetime.strptime(f"{eas_issue}", '%j%H%M').replace(tzinfo=timezone.utc)
+    year = datetime.now().year
+    issue_dt = datetime.strptime(f"{year}{eas_issue}", '%Y%j%H%M').replace(tzinfo=timezone.utc)
     issue = issue_dt.astimezone(ZoneInfo(config['timezone']))
     purge = issue + timedelta(hours=int(eas_purge[:2]), minutes=int(eas_purge[2:]))
 
