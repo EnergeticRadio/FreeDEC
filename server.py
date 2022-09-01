@@ -102,7 +102,7 @@ app.mount('/static', StaticFiles(directory='html/static'), name='static')
 
 
 @app.get('/api/get_alert')
-async def read_item(callsign):
+async def read_item(callsign: str):
     for file in os.listdir(audio_base_dir):
         if f'{callsign}.wav' in file:
             return file
@@ -111,7 +111,7 @@ async def read_item(callsign):
 
 
 @app.get('/api/clear_alert')
-async def clear_alert(callsign):
+async def clear_alert(callsign: str):
     for file in os.listdir(audio_base_dir):
         if f'{callsign}.wav' in file:
             os.remove(f'{audio_base_dir}/{file}')
@@ -127,7 +127,7 @@ async def get_status():
 
 
 @app.get('/api/set_status')
-async def set_status(group, name, status):
+async def set_status(group: str, name: str, status: str):
     s.set(group, name, status)
 
     return 'ok'
