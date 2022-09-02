@@ -131,31 +131,38 @@
         <div class="column">
             <h1 class="is-size-4 has-text-bold ml-2">Received alerts</h1>
             <div class="box">
-                <table class="table is-fullwidth is-striped ">
-                    <thead>
-                        <tr>
-                            <td>Originator</td>
-                            <td>Received from</td>
-                            <td>Event</td>
-                            <td>Received</td>
-                            <td>Issued</td>
-                            <td>Expires</td>
-                            <td>Affected areas</td>
-                        </tr>
-                    </thead>
+                <div class="table-container">
+                    <table class="table is-fullwidth is-striped" id="log">
+                        <thead>
+                            <tr>
+                                <td>Originator</td>
+                                <td>From</td>
+                                <td>Event</td>
+                                <td>Received</td>
+                                <td>Issued</td>
+                                <td>Expires</td>
+                                <td>Locations</td>
+                                <td>Audio</td>
+                            </tr>
+                        </thead>
 
-                    <tbody>
-                        <tr>
-                            <td>EAS</td>
-                            <td>KSCS</td>
-                            <td>Flash Flood Warning</td>
-                            <td>2341730</td>
-                            <td>2341730</td>
-                            <td>2342030</td>
-                            <td>Somervell County, Texas</td>
-                        </tr>
-                    </tbody>
-                </table>
+                        <tbody>
+                            <tr v-for="line in data" v-cloak>
+                                <td>{{ line.originator }}</td>
+                                <td>{{ line.from_callsign }}</td>
+                                <td>{{ line.event }}</td>
+                                <td>{{ line.received }}</td>
+                                <td>{{ line.issue }}</td>
+                                <td>{{ line.purge }}</td>
+                                <td>{{ line.areas_str }}</td>
+                                <td v-if="line.raw_audio">
+                                    <a v-bind:href="line.raw_audio" download>Download</a>
+                                </td>
+                                <td v-else></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -182,7 +189,25 @@
             }, 500)
         }
     })
+
+    const log = createApp({
+        data() {
+            return {
+                data: []
+            }
+        },
+        mounted() {
+            this.intervalFetch = setInterval(() => {
+                axios
+                .get('/api/get_log?max_lines=15')
+                .then((response) => {
+                    this.data = response.data
+                })
+            }, 1000)
+        }
+    })
     status.mount('#status');
+    log.mount('#log');
 </script>
 </body>
 </html>

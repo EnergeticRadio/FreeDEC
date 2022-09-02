@@ -133,6 +133,10 @@ async def set_status(group: str, name: str, status: str):
     return 'ok'
 
 
+@app.get('/api/get_log')
+async def set_status(max_lines: int = 20):
+    return same.get_log(max_lines)
+
 # ===== API URLs ===== #
 
 

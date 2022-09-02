@@ -70,7 +70,7 @@ def message_type(raw_same):
 def is_dupe(decoded):
     """Check if received message is a duplicate"""
 
-    raw_same = decoded['raw_same']
+    raw_same = decoded['same']
     msg_ident = raw_same.rsplit('-', 2)[0]
     timestamp = decoded['timestamp']
 
@@ -108,6 +108,7 @@ def get_modules():
 
 def get_log(max_lines):
     """Return max_lines latest received alerts"""
+
     try:
         with open('eas.log', 'r') as f:
             alerts = []
@@ -121,8 +122,8 @@ def get_log(max_lines):
 
                 decoded = decode(same)
 
-                archive_path = f'{config["audio_base_dir"]}/ARCHIVE/' \
-                               f'{decoded["filename"]}-{decoded["from_callsign"]}'
+                archive_path = f'ARCHIVE/{received}-' \
+                               f'{decoded["event_code"]}-{decoded["from_callsign"]}.wav'
 
                 received = datetime.fromtimestamp(int(received)).strftime("%A, %B %d at %H:%M")
                 issue = decoded['issue'].strftime("%A, %B %d at %H:%M")
@@ -132,8 +133,8 @@ def get_log(max_lines):
                 decoded['issue'] = issue
                 decoded['purge'] = purge
 
-                print(archive_path)
-                print(os.path.exists(archive_path))
+                if os.path.exists(f'{config["audio_base_dir"]}/{archive_path}'):
+                    decoded['raw_audio'] = f'audio/{archive_path}'
 
                 alerts.append(decoded)
 
@@ -171,14 +172,12 @@ def decode(raw_same):
 
         if fips_code[1:3] != '00':
             state = all_fips['state'][fips_code[1:3]]
-
         else:
             us_all = True
             state = 'USA'
 
         if fips_code[3:6] != '000':
             county = all_fips['county'][f'{fips_code[1:3]}{fips_code[3:6]}']
-
         else:
             county = 'All of'
 
@@ -188,6 +187,8 @@ def decode(raw_same):
             'state': state
         })
 
+    areas_str = '; '.join([f'{s["county"]} {s["state"]}' for s in fips])
+
     eas = {
         'same': raw_same,
         'ident': raw_same.rsplit('-', 2)[0],
@@ -195,6 +196,7 @@ def decode(raw_same):
         'event_code': event_code,
         'event': event,
         'areas': fips,
+        'areas_str': areas_str,
         'entire_us': us_all,
         'from_callsign': callsign.replace('/', '-'),
         'filename': f'{timestamp}-{event_code}',

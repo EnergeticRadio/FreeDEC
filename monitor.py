@@ -90,12 +90,9 @@ class Monitor:
 
             if not same.is_dupe(self.last_eas):
                 if not self.awaiting_eom:
-                    log_str = 'Receiving EAS from: '
-                    log_str += f'{self.last_eas["from_callsign"]} | '
-                    log_str += f'{self.last_eas["event"]} for '
-                    log_str += '; '.join([f'{s["county"]} {s["state"]}' for s in self.last_eas['areas']])
-
-                    print(log_str.strip())
+                    print(f'Receiving EAS from: {self.last_eas["from_callsign"]} | '
+                          f'{self.last_eas["event"]} for '
+                          f'{self.last_eas["areas_str"]}')
 
                     self._record_pulse()
                     self.awaiting_eom = True
