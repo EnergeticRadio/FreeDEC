@@ -137,6 +137,9 @@ name: <alsa_output.pci-0000_00_14.2.analog-stereo.monitor>
 The pulseaudio device name would be
 > alsa_output.pci-0000_00_14.2.analog-stereo.monitor
 
+NOTE: if a pulseaudio default device is modified/set at any time once the monitor has started,
+monitor.py must be restarted, or it will record/monitor from the wrong pulseaudio device.
+
 ## FreeDEC in action
 #### Radio
 [RadioC5 (DFW)](https://radioc5.com "RadioC5 (DFW)")
