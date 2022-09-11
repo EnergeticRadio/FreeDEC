@@ -95,6 +95,29 @@ All systems UP
 Monitoring
 ```
 
+Load the web interface
+```
+http://IP:PORT
+```
+IP is the IP of the machine running FreeDEC
+
+PORT is the port you set in the config under [server], default: 8080
+
+## Relays
+Before running a relay, it must be configured as a [[stations]] block. See below for configuration.
+
+Each [[stations]] block can only be used by a single relay. 
+
+#### Jack relay
+On a machine with a running jackd server:
+```
+>>> python3 relay_jack.py SERVER CALLSIGN
+```
+
+SERVER is the ip of your FreeDEC monitor.
+
+CALLSIGN is the callsign field in your [[stations]] block.
+
 ## Configuration
 #### timezone
 The server's timezone, used for translating time of issue (UTC) to local time
@@ -113,7 +136,6 @@ Event codes with the value of 'True' are relayed on all stations, if the alert m
 Multiple stations, or relays can be defined here, one per stations block.
 ```
 [[stations]]
-name="Station"
 callsign="KXXX"
 fips=[
     "48000",
