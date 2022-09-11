@@ -20,7 +20,11 @@ import time
 import re
 import os
 from datetime import datetime, timedelta, timezone
-from zoneinfo import ZoneInfo
+
+try:
+    import zoneinfo
+except ImportError:
+    from backports.zoneinfo import ZoneInfo
 
 import toml
 import _audio as audio

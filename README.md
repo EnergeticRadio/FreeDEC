@@ -51,6 +51,10 @@ soundfile
 toml
 uvicorn
 
+If your python version is older than 3.9, you will need:
+
+backports.zoneinfo
+
 #### Download and setup
 Get the source
 ```
@@ -64,7 +68,15 @@ Alternatively
 ```
 
 Install python3, multimon-ng, as well as pip requirements
+
+python3.9+
 ```
+>>> pip3 install -r requirements.txt
+```
+
+Before python3.9:
+```
+>>> pip3 install backports.zoneinfo
 >>> pip3 install -r requirements.txt
 ```
 
@@ -73,6 +85,7 @@ setup (see below for configuration)
 >>> cd FreeDEC-main
 >>> nano config/config.toml
 ```
+
 Start server and monitor
 ```
 >>> python3 server.py & python3 monitor.py
