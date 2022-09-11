@@ -30,7 +30,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('server', help='Server IP')
 parser.add_argument('callsign', help='Station callsign')
 parser.add_argument(
-    '-p', '--port', type=int, default=80,
+    '-p', '--port', type=int, default=8080,
     help='Server port (default: %(default)s)')
 parser.add_argument(
     '-c', '--channels', type=int, default=1,
