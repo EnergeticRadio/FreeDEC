@@ -80,7 +80,7 @@
         <div class="navbar-end">
             <div class="navbar-item">
                 <div class="buttons">
-                    <a class="button is-danger">
+                    <a class="button is-danger" id="RWTBtn" onclick="sendRwt()">
                         <strong>RWT</strong>
                     </a>
 
@@ -171,6 +171,17 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="https://unpkg.com/vue@3"></script>
 <script>
+    function sendRwt() {
+        const rwtBtn = document.getElementById('RWTBtn')
+        rwtBtn.classList.add('is-loading')
+
+        axios
+        .get('/api/send_rwt')
+        .then((response) => {
+            rwtBtn.classList.remove('is-loading')
+        })
+    }
+
     const { createApp } = Vue
 
     const status = createApp({
@@ -206,8 +217,9 @@
             }, 1000)
         }
     })
-    status.mount('#status');
-    log.mount('#log');
+
+    status.mount('#status')
+    log.mount('#log')
 </script>
 </body>
 </html>

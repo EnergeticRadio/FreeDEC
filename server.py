@@ -137,7 +137,14 @@ async def set_status(group: str, name: str, status: str):
 async def set_status(max_lines: int = 20):
     return same.get_log(max_lines)
 
-# ===== API URLs ===== #
+
+@app.get('/api/send_rwt')
+async def send_rwt():
+
+    return same.rwt()
+
+
+# ===== Admin URLs ===== #
 
 
 @app.get('/')

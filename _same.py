@@ -212,6 +212,27 @@ def decode(raw_same):
     return eas
 
 
+def rwt():
+    """Send a Required Weekly Test"""
+
+    utcnow = datetime.utcnow()
+    timestamp = int(time.time())
+    filename = f'{config["audio_base_dir"]}/{timestamp}-RWT'
+
+    issue = utcnow.strftime('%j%H%M')
+
+    for s in config['stations']:
+        call = s['callsign']
+        areas = '-'.join(f'0{area}' for area in s['fips'])
+        header = f'ZCZC-EAS-RWT-{areas}+0100-{issue}-' \
+                 f'{call.replace("-", "/").ljust(8)}-'
+        out_filename = f'{filename}-{call}.wav'
+
+        audio.encode_eas(header, out_filename, attention_tone=False)
+
+    return [s['callsign'] for s in config['stations']]
+
+
 def re_encode(eas):
     """Generate EAS with new SAME header and EOM for each station, keeping the audio message"""
 
