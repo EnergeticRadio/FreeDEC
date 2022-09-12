@@ -63,8 +63,7 @@ Get the source
 
 Alternatively
 ```
->>> wget https://github.com/EnergeticRadio/FreeDEC/archive/master.tar.gz
->>> tar -xvf master.tar.gz
+>>> wget https://github.com/EnergeticRadio/FreeDEC/archive/master.tar.gz && tar -xvf master.tar.gz
 ```
 
 Install python3, multimon-ng, as well as pip requirements
