@@ -22,7 +22,7 @@ import os
 from datetime import datetime, timedelta, timezone
 
 try:
-    import zoneinfo
+    from zoneinfo import ZoneInfo
 except ImportError:
     from backports.zoneinfo import ZoneInfo
 

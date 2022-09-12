@@ -19,6 +19,7 @@
 import os
 import subprocess
 import threading
+import time
 
 import toml
 import requests
@@ -41,12 +42,6 @@ class Monitor:
         self.last_eas = None
 
         self._start_monitor()
-
-    @property
-    def _is_alive(self):
-        """Check if decoder process is still running"""
-
-        return self.monitor.poll() is None
 
     def set_status(self, status):
         host = config["server"]["host"]
@@ -135,12 +130,16 @@ def main():
     monitors = {}
 
     for source in config['sources']:
-        monitors[source['name']] = threading.Thread(target=run_monitor, args=(source['name'], source['device'], ))
+        monitors[source['name']] = threading.Thread(target=run_monitor, args=(source['name'], source['device'], ),
+                                                    daemon=True)
         monitors[source['name']].start()
 
     print(f"""Active audio sources: {', '.join([f"{s['name']} ({s['type']})" for s in config['sources']])}""")
     print('All systems UP')
     print('Monitoring')
+
+    while True:
+        time.sleep(1)
 
 
 if __name__ == '__main__':
