@@ -16,7 +16,6 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-import os
 import subprocess
 import threading
 import time
@@ -143,8 +142,6 @@ def main():
 
 
 if __name__ == '__main__':
-    os.makedirs(f'{config["audio_base_dir"]}/ARCHIVE', exist_ok=True)
-
     try:
         main()
     except KeyboardInterrupt:

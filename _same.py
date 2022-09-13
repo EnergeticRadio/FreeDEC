@@ -32,6 +32,8 @@ import _audio as audio
 all_fips = toml.load('config/fips.toml')
 config = toml.load('config/config.toml')
 
+os.makedirs(f'{config["audio_base_dir"]}/ARCHIVE', exist_ok=True)
+
 
 def _message_applicable(eas):
     """Check event code against enabled events, and message FIPS code(s) against each station's enabled FIPS codes"""
