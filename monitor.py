@@ -53,7 +53,7 @@ class Monitor:
         }
 
         try:
-            requests.get(f'http://{host}:{port}/api/set_status', params=params)
+            requests.put(f'http://{host}:{port}/api/status', params=params)
 
         except requests.exceptions.ConnectionError:
             pass

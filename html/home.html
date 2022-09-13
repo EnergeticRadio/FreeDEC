@@ -176,7 +176,7 @@
         rwtBtn.classList.add('is-loading')
 
         axios
-        .get('/api/send_rwt')
+        .post('/api/rwt')
         .then((response) => {
             rwtBtn.classList.remove('is-loading')
         })
@@ -193,7 +193,7 @@
         mounted() {
             this.intervalFetch = setInterval(() => {
                 axios
-                .get('/api/get_status')
+                .get('/api/status')
                 .then((response) => {
                     this.data = response.data
                 })
@@ -210,7 +210,7 @@
         mounted() {
             this.intervalFetch = setInterval(() => {
                 axios
-                .get('/api/get_log?max_lines=15')
+                .get('/api/log?max_lines=15')
                 .then((response) => {
                     this.data = response.data
                 })

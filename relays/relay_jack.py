@@ -47,7 +47,7 @@ q = queue.Queue(maxsize=buffer_size)
 
 
 def check_incoming(callsign):
-    r = requests.get(f'{server_url}/api/get_alert?callsign={callsign}')
+    r = requests.get(f'{server_url}/api/alert?callsign={callsign}')
 
     if not r.text == 'null':
         time.sleep(1)
@@ -70,7 +70,7 @@ def set_status(status):
     }
 
     try:
-        requests.get(f'{server_url}/api/set_status', params=params)
+        requests.put(f'{server_url}/api/status', params=params)
 
     except requests.exceptions.ConnectionError:
         pass
@@ -135,7 +135,7 @@ with client:
 
                         q.put(None, timeout=timeout)
 
-                    requests.get(f'{server_url}/api/clear_alert?callsign={callsign}')
+                    requests.delete(f'{server_url}/api/alert?callsign={callsign}')
                     os.remove('alert.wav')
 
                     print('EOM')

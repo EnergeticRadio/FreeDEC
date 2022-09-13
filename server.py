@@ -101,8 +101,8 @@ app.mount('/static', StaticFiles(directory='html/static'), name='static')
 # ===== API URLs ===== #
 
 
-@app.get('/api/get_alert')
-async def read_item(callsign: str):
+@app.get('/api/alert')
+async def get_alert(callsign: str):
     for file in os.listdir(audio_base_dir):
         if f'{callsign}.wav' in file:
             return file
@@ -110,8 +110,8 @@ async def read_item(callsign: str):
     return None
 
 
-@app.get('/api/clear_alert')
-async def clear_alert(callsign: str):
+@app.delete('/api/alert')
+async def del_alert(callsign: str):
     for file in os.listdir(audio_base_dir):
         if f'{callsign}.wav' in file:
             os.remove(f'{audio_base_dir}/{file}')
@@ -121,26 +121,25 @@ async def clear_alert(callsign: str):
     return None
 
 
-@app.get('/api/get_status')
+@app.get('/api/status')
 async def get_status():
     return s.get()
 
 
-@app.get('/api/set_status')
+@app.put('/api/status')
 async def set_status(group: str, name: str, status: str):
     s.set(group, name, status)
 
     return 'ok'
 
 
-@app.get('/api/get_log')
+@app.get('/api/log')
 async def set_status(max_lines: int = 20):
     return same.get_log(max_lines)
 
 
-@app.get('/api/send_rwt')
+@app.post('/api/rwt')
 async def send_rwt():
-
     return same.rwt()
 
 
