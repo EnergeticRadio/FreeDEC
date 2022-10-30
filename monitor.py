@@ -63,6 +63,12 @@ class Monitor:
         self.monitor = subprocess.Popen(['monitors/multimon-pulse.sh', self.device], stdout=subprocess.PIPE)
         self.set_status('idle')
 
+    @property
+    def _is_alive(self):
+        """Check if decoder process is still running"""
+
+        return self.monitor.poll() is None
+
     def _record_pulse(self):
         """Records from a specific pulseaudio device"""
 
@@ -77,7 +83,13 @@ class Monitor:
         raw_same = self.monitor.stdout.readline().decode('utf-8').strip('EAS: ').strip()
         msg_type = same.message_type(raw_same)
 
-        if msg_type == 'eas':
+        if not self._is_alive:
+            # Restart monitor if killed
+            print(f'Monitor {self.name} died, restarting...')
+
+            self._start_monitor()
+
+        elif msg_type == 'eas':
             # Decode and start recording
 
             self.last_eas = same.decode(raw_same)
